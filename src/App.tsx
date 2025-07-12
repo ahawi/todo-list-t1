@@ -19,12 +19,6 @@ const App = () => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id))
   }
 
-  const handleToggleComplete = (id: number) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) => (task.id === id ? {...task, status: task.status === 'Done' ? 'To Do' : 'Done'} : task)),
-    )
-  }
-
   const handleAddTask = (newTask: Task) => {
     setTasks((prevTasks) => [newTask, ...prevTasks])
   }
@@ -34,15 +28,7 @@ const App = () => {
     const handleEdit = (id: number) => {
       navigate(`/task/${id}`)
     }
-    return (
-      <TaskList
-        tasks={tasks}
-        onDelete={handleDeleteTask}
-        onToggleComplete={handleToggleComplete}
-        onEdit={handleEdit}
-        onAddTask={handleAddTask}
-      />
-    )
+    return <TaskList tasks={tasks} onDelete={handleDeleteTask} onEdit={handleEdit} onAddTask={handleAddTask} />
   }
 
   return (

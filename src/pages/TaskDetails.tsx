@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react'
 import {Form, Input, Select, Button, Space} from 'antd'
 import {useParams, useNavigate} from 'react-router-dom'
-
+import styles from './TaskDetails.module.css'
 import {type Task} from '../types/Task'
 
 const {Option} = Select
@@ -43,7 +43,7 @@ export default function TaskDetails({getTaskById, onUpdateTask}: TaskDetailsProp
   }
 
   return (
-    <div style={{padding: '20px', maxWidth: '600px', margin: '0 auto'}}>
+    <div className={styles.card__details}>
       <h2>Edit task</h2>
       <Form form={form} layout='vertical' onFinish={onFinish} initialValues={getTaskById(Number(id))}>
         <Form.Item name='title' label='Title' rules={[{required: true}]}>
@@ -51,7 +51,7 @@ export default function TaskDetails({getTaskById, onUpdateTask}: TaskDetailsProp
         </Form.Item>
 
         <Form.Item name='description' label='Description'>
-          <TextArea rows={4} />
+          <TextArea />
         </Form.Item>
 
         <Form.Item name='category' label='Category' rules={[{required: true}]}>

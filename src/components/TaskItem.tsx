@@ -1,5 +1,6 @@
-import { Button, Tag, Space} from 'antd'
+import {Button, Tag} from 'antd'
 import {DeleteOutlined, MoreOutlined} from '@ant-design/icons'
+import styles from './TaskItem.module.css'
 
 interface Task {
   id: number
@@ -47,57 +48,28 @@ const getPriorityColor = (priority: Task['priority']) => {
 }
 
 export default function TaskItem({item, onDelete, onEdit}: TaskItemProps) {
+  const MAX_DESCRIPTION_LENGTH = 30
+  const displayDescription =
+    item.description && item.description.length > MAX_DESCRIPTION_LENGTH
+      ? item.description.substring(0, MAX_DESCRIPTION_LENGTH) + '...'
+      : item.description
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        width: '100%',
-        padding: '12px 16px',
-        border: '1px solid #d9d9d9',
-        borderRadius: '8px',
-        marginBottom: '8px',
-        backgroundColor: item.status === 'Done' ? '#f5f5f5' : 'white',
-        transition: 'background-color 0.3s ease',
-      }}
-    >
-      <div style={{display: 'flex', alignItems: 'center'}}>
-       
+    <div className={`${styles.card__container} ${item.status === 'Done' ? styles.card__done : ''}`}>
+      <div className={styles.card__inner}>
         <div>
-          <h4
-            style={{
-              margin: '0',
-              textDecoration: item.status === 'Done' ? 'line-through' : 'none',
-              color: item.status === 'Done' ? '#888' : '#333',
-            }}
-          >
-            {item.title}
-          </h4>
-          <p
-            style={{
-              textDecoration: item.status === 'Done' ? 'line-through' : 'none',
-              color: item.status === 'Done' ? '#808080' : '#333',
-            }}
-          >
-            {item.description}
-          </p>
-          <div style={{marginTop: '5px'}}>
-            <Tag color={getCategoryColor(item.category)} style={{marginRight: '8px'}}>
-              {item.category}
-            </Tag>
-            <Tag color={getPriorityColor(item.priority)} style={{marginRight: '8px'}}>
-              {item.priority}
-            </Tag>
+          <h4 className={styles.card__title}>{item.title}</h4>
+          <p className={styles.card__description}>{displayDescription}</p>
+          <div className={styles.card__tags}>
+            <Tag color={getCategoryColor(item.category)}>{item.category}</Tag>
+            <Tag color={getPriorityColor(item.priority)}>{item.priority}</Tag>
             <Tag>{item.status}</Tag>
           </div>
         </div>
       </div>
-      <Space>
+      <div className={styles.card__actions}>
         <Button type='text' danger icon={<DeleteOutlined />} onClick={() => onDelete(item.id)} />
         <Button type='text' icon={<MoreOutlined />} onClick={() => onEdit(item.id)} />
-      </Space>
+      </div>
     </div>
   )
 }
-

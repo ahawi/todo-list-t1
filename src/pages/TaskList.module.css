@@ -1,0 +1,60 @@
+.tasklist {
+  max-width: 1400px;
+  margin: 40px auto;
+  padding: 20px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tasklist__actions {
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-right: auto;
+}
+
+.tasklist__actionsInner {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 30px;
+}
+
+.tasklist__lists {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+}
+
+.tasklist__card {
+  margin-bottom: 20px;
+  flex: 1;
+  margin: 0 8px;
+}
+
+.tasklist__cardTitle {
+  text-align: center;
+  color: #888;
+}
+
+.tasklist__cardInner {
+  padding: 0;
+  border-bottom: 0;
+}
+
+.tasklist__actionsBottom {
+  display: flex;
+  gap: 20px;
+}
+
+.tasklist__actionsTop {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
