@@ -83,7 +83,7 @@ export default function TaskDetails({getTaskById, onUpdateTask}: TaskDetailsProp
         <Form.Item>
           <Space>
             <Button type='primary' htmlType='submit'>
-              Сохранить
+              Save
             </Button>
             <Button onClick={onCancel}>Cancel</Button>
           </Space>

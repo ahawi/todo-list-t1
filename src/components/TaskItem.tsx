@@ -1,4 +1,4 @@
-import {Checkbox, Button, Tag, Space} from 'antd'
+import { Button, Tag, Space} from 'antd'
 import {DeleteOutlined, MoreOutlined} from '@ant-design/icons'
 
 interface Task {
@@ -13,7 +13,6 @@ interface Task {
 interface TaskItemProps {
   item: Task
   onDelete: (id: number) => void
-  onToggleComplete: (id: number) => void
   onEdit: (id: number) => void
 }
 
@@ -47,7 +46,7 @@ const getPriorityColor = (priority: Task['priority']) => {
   }
 }
 
-export default function TaskItem({item, onDelete, onToggleComplete, onEdit}: TaskItemProps) {
+export default function TaskItem({item, onDelete, onEdit}: TaskItemProps) {
   return (
     <div
       style={{
@@ -64,11 +63,7 @@ export default function TaskItem({item, onDelete, onToggleComplete, onEdit}: Tas
       }}
     >
       <div style={{display: 'flex', alignItems: 'center'}}>
-        <Checkbox
-          checked={item.status === 'Done'}
-          onChange={() => onToggleComplete(item.id)}
-          style={{marginRight: '15px'}}
-        />
+       
         <div>
           <h4
             style={{

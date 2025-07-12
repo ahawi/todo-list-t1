@@ -59,10 +59,36 @@ export default function TaskList({tasks, onDelete, onToggleComplete, onEdit, onA
     }
   }
 
+  const todoTasks = tasks.filter((task) => task.status === 'To Do')
+  const inProgressTasks = tasks.filter((task) => task.status === 'In Progress')
+  const doneTasks = tasks.filter((task) => task.status === 'Done')
+
+  const renderTaskList = (taskList: Task[], title: string) => (
+    <Card title={title} style={{marginBottom: '20px', flex: '1', minWidth: '300px', margin: '0 8px'}}> 
+      {taskList.length === 0 ? (
+        <p style={{textAlign: 'center', color: '#888'}}>No tasks in this column.</p>
+      ) : (
+        <List
+          itemLayout='horizontal'
+          dataSource={taskList}
+          renderItem={(task) => (
+            <List.Item key={task.id} style={{padding: '0', borderBottom: 'none'}}>
+              <TaskItem
+                item={task}
+                onDelete={handleDeleteTask}
+                onEdit={handleEditTask}
+              />
+            </List.Item>
+          )}
+        />
+      )}
+    </Card>
+  )
+
   return (
     <div
       style={{
-        maxWidth: '800px',
+        maxWidth: '1200px',
         margin: '40px auto',
         padding: '20px',
         border: '1px solid #eee',
@@ -110,24 +136,19 @@ export default function TaskList({tasks, onDelete, onToggleComplete, onEdit, onA
           </Button>
         </Space>
       </Card>
-      {tasks.length === 0 ? (
-        <p style={{textAlign: 'center', color: '#888'}}>No tasks to display.</p>
-      ) : (
-        <List
-          itemLayout='horizontal'
-          dataSource={tasks}
-          renderItem={(task) => (
-            <List.Item key={task.id} style={{padding: '0', borderBottom: 'none'}}>
-              <TaskItem
-                item={task}
-                onDelete={handleDeleteTask}
-                onToggleComplete={handleToggleComplete}
-                onEdit={handleEditTask}
-              />
-            </List.Item>
-          )}
-        />
-      )}
+
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap', 
+          justifyContent: 'space-between', 
+          gap: '16px', 
+        }}
+      >
+        {renderTaskList(todoTasks, 'To Do')}
+        {renderTaskList(inProgressTasks, 'In Progress')}
+        {renderTaskList(doneTasks, 'Done')}
+      </div>
     </div>
   )
 }
