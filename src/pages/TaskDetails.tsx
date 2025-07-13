@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import {useEffect} from 'react'
 import {Form, Input, Select, Button, Space, Card} from 'antd'
 import {useParams, useNavigate} from 'react-router-dom'
 import styles from './TaskDetails.module.css'
@@ -16,14 +16,12 @@ export default function TaskDetails({getTaskById, onUpdateTask}: TaskDetailsProp
   const {id} = useParams<{id: string}>()
   const navigate = useNavigate()
   const [form] = Form.useForm()
-  const [taskExists, setTaskExists] = useState(false)
 
   useEffect(() => {
     if (id) {
       const task = getTaskById(Number(id))
       if (task) {
         form.setFieldsValue(task)
-        setTaskExists(true)
       } else {
         navigate('/tasks')
       }
