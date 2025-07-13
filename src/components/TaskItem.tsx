@@ -48,7 +48,7 @@ const getPriorityColor = (priority: Task['priority']) => {
 }
 
 export default function TaskItem({item, onDelete, onEdit}: TaskItemProps) {
-  const MAX_DESCRIPTION_LENGTH = 30
+  const MAX_DESCRIPTION_LENGTH = 20
   const displayDescription =
     item.description && item.description.length > MAX_DESCRIPTION_LENGTH
       ? item.description.substring(0, MAX_DESCRIPTION_LENGTH) + '...'
