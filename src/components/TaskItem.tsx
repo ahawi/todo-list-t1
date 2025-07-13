@@ -1,5 +1,5 @@
 import {Button, Tag} from 'antd'
-import {DeleteOutlined, MoreOutlined} from '@ant-design/icons'
+import {DeleteOutlined, EditOutlined} from '@ant-design/icons'
 import styles from './TaskItem.module.css'
 
 interface Task {
@@ -68,7 +68,7 @@ export default function TaskItem({item, onDelete, onEdit}: TaskItemProps) {
       </div>
       <div className={styles.card__actions}>
         <Button type='text' danger icon={<DeleteOutlined />} onClick={() => onDelete(item.id)} />
-        <Button type='text' icon={<MoreOutlined />} onClick={() => onEdit(item.id)} />
+        <Button type='text' icon={<EditOutlined />} onClick={() => onEdit(item.id)} />
       </div>
     </div>
   )

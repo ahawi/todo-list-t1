@@ -3,17 +3,12 @@
   padding-bottom: 0;
   max-width: 600px;
   margin: 0 auto;
-  background-color: transparent;
-}
-
-.card__details{
   box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   position: relative;
   z-index: 1;
   overflow: hidden;
-  border: none;
-  background-color: #eaf8fd75 ;
+  background-color: #eaf8fd75;
   border: 1px solid #fff;
 }
 
@@ -25,4 +20,10 @@
   margin: -20px;
   box-shadow: inset 0 0 200px rgba(255, 255, 255, 0.5);
   filter: blur(10px);
+}
+
+@media (max-width: 768px) {
+  .card__details {
+    padding: 0;
+  }
 }
