@@ -14,7 +14,7 @@ export function RenderTaskList({taskList, title, onDelete, onEdit}: RenderTaskLi
   return (
     <Card title={title} className={styles.tasklist__card}>
       {taskList.length === 0 ? (
-        <p className={styles.tasklist__cardTitle}>No tasks in this column.</p>
+        <p className={styles.tasklist__cardTitle}>No tasks in this column</p>
       ) : (
         <List
           itemLayout='horizontal'
