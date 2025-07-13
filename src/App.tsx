@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Routes, Route, useNavigate} from 'react-router-
 import TaskList from './pages/TaskList'
 import TaskDetails from './pages/TaskDetails'
 import {type Task} from './types/Task'
+import styles from './App.module.css'
 
 const App = () => {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -33,7 +34,7 @@ const App = () => {
 
   return (
     <Router>
-      <div style={{padding: '20px'}}>
+      <div className={styles.app__container}>
         <Routes>
           <Route path='/' element={<TaskListWrapper />} />
           <Route path='/tasks' element={<TaskListWrapper />} />

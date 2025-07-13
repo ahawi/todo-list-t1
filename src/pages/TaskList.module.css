@@ -1,10 +1,13 @@
 .tasklist {
   max-width: 1400px;
-  margin: 40px auto;
+  margin: 0 auto;
   padding: 20px;
-  border: 1px solid #eee;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border: none;
 }
 
 .tasklist__actions {
@@ -69,9 +72,21 @@
   min-width: 300px;
 }
 
+.tasklist__card,
+.tasklist__actions {
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border: none;
+  background-color: #eaf8fd75;
+  border: 1px solid #fff;
+}
+
 .tasklist__cardTitle {
   text-align: center;
-  color: #888;
+  color: #7b6161;
   white-space: normal;
   margin-bottom: 0;
 }
@@ -79,6 +94,23 @@
 .tasklist__cardInner {
   padding: 0;
   border-bottom: 0;
+  border: none !important;
+}
+
+.tasklist__select {
+  min-width: 140px;
+}
+
+.tasklist__card::before,
+.tasklist__actions::before,
+.tasklist::before {
+  content: '';
+  position: absolute;
+  background: inherit;
+  z-index: -1;
+  margin: -20px;
+  box-shadow: inset 0 0 200px rgba(255, 255, 255, 0.5);
+  filter: blur(10px);
 }
 
 @media (max-width: 1280px) {

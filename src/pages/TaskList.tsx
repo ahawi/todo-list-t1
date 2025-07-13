@@ -65,33 +65,42 @@ export default function TaskList({tasks, onDelete, onEdit, onAddTask}: TaskListP
       <Card title='Add New Task' className={styles.tasklist__actions}>
         <div className={styles.tasklist__actionsInner}>
           <div className={styles.tasklist__actionsTop}>
-          <Input
-            value={newTaskText}
-            onChange={(e) => setNewTaskText(e.target.value)}
-            placeholder='Enter new task title'
-            onKeyDown={handleKeyDown}
-          />
-          <TextArea
-            value={newDescriptionText}
-            onChange={(e) => setNewDescriptionText(e.target.value)}
-            placeholder='Enter new task description'
-          /></div>
+            <Input
+              value={newTaskText}
+              onChange={(e) => setNewTaskText(e.target.value)}
+              placeholder='Enter new task title'
+              onKeyDown={handleKeyDown}
+            />
+            <TextArea
+              value={newDescriptionText}
+              onChange={(e) => setNewDescriptionText(e.target.value)}
+              placeholder='Enter new task description'
+            />
+          </div>
           <div className={styles.tasklist__actionsBottom}>
-          <Select value={newCategory} onChange={(value) => setNewCategory(value as Task['category'])}>
-            <Option value='Feature'>Feature</Option>
-            <Option value='Bug'>Bug</Option>
-            <Option value='Documentation'>Documentation</Option>
-            <Option value='Refactor'>Refactor</Option>
-            <Option value='Test'>Test</Option>
-          </Select>
-          <Select value={newPriority} onChange={(value) => setNewPriority(value as Task['priority'])}>
-            <Option value='Low'>Low</Option>
-            <Option value='Medium'>Medium</Option>
-            <Option value='High'>High</Option>
-          </Select>
-          <Button type='primary' icon={<PlusOutlined />} onClick={handleAddNewTask}>
-            Add Task
-          </Button>
+            <Select
+              className={styles.tasklist__select}
+              value={newCategory}
+              onChange={(value) => setNewCategory(value as Task['category'])}
+            >
+              <Option value='Feature'>Feature</Option>
+              <Option value='Bug'>Bug</Option>
+              <Option value='Documentation'>Documentation</Option>
+              <Option value='Refactor'>Refactor</Option>
+              <Option value='Test'>Test</Option>
+            </Select>
+            <Select
+              className={styles.tasklist__select}
+              value={newPriority}
+              onChange={(value) => setNewPriority(value as Task['priority'])}
+            >
+              <Option value='Low'>Low</Option>
+              <Option value='Medium'>Medium</Option>
+              <Option value='High'>High</Option>
+            </Select>
+            <Button type='primary' icon={<PlusOutlined />} onClick={handleAddNewTask}>
+              Add Task
+            </Button>
           </div>
         </div>
       </Card>

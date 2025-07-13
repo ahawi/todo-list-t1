@@ -60,13 +60,9 @@ export default function TaskItem({item, onDelete, onEdit}: TaskItemProps) {
           <h4 className={`${styles.card__title} ${item.status === 'Done' ? styles.card__done : ''}`}>{item.title}</h4>
           <p className={styles.card__description}>{displayDescription}</p>
           <div className={styles.card__tags}>
-            <Tag className={styles.card__tag} color={getCategoryColor(item.category)}>
-              {item.category}
-            </Tag>
-            <Tag className={styles.card__tag} color={getPriorityColor(item.priority)}>
-              {item.priority}
-            </Tag>
-            <Tag className={styles.card__tag}>{item.status}</Tag>
+            <Tag color={getCategoryColor(item.category)}>{item.category}</Tag>
+            <Tag color={getPriorityColor(item.priority)}>{item.priority}</Tag>
+            <Tag>{item.status}</Tag>
           </div>
         </div>
       </div>

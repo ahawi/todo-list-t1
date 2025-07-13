@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react'
-import {Form, Input, Select, Button, Space} from 'antd'
+import {Form, Input, Select, Button, Space, Card} from 'antd'
 import {useParams, useNavigate} from 'react-router-dom'
 import styles from './TaskDetails.module.css'
 import {type Task} from '../types/Task'
@@ -43,8 +43,7 @@ export default function TaskDetails({getTaskById, onUpdateTask}: TaskDetailsProp
   }
 
   return (
-    <div className={styles.card__details}>
-      <h2>Edit task</h2>
+    <Card title='Edit task' className={styles.card__details}>
       <Form form={form} layout='vertical' onFinish={onFinish} initialValues={getTaskById(Number(id))}>
         <Form.Item name='title' label='Title' rules={[{required: true}]}>
           <Input />
@@ -82,13 +81,13 @@ export default function TaskDetails({getTaskById, onUpdateTask}: TaskDetailsProp
 
         <Form.Item>
           <Space>
-            <Button type='primary' htmlType='submit'>
+            <Button color='blue' variant='solid' htmlType='submit'>
               Save
             </Button>
             <Button onClick={onCancel}>Cancel</Button>
           </Space>
         </Form.Item>
       </Form>
-    </div>
+    </Card>
   )
 }
