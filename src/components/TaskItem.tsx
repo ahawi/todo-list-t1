@@ -62,7 +62,6 @@ export default function TaskItem({item, onDelete, onEdit}: TaskItemProps) {
           <div className={styles.card__tags}>
             <Tag color={getCategoryColor(item.category)}>{item.category}</Tag>
             <Tag color={getPriorityColor(item.priority)}>{item.priority}</Tag>
-            <Tag>{item.status}</Tag>
           </div>
         </div>
       </div>
