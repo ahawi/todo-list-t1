@@ -75,6 +75,7 @@ export default function TaskList({tasks, onDelete, onEdit, onAddTask}: TaskListP
               value={newDescriptionText}
               onChange={(e) => setNewDescriptionText(e.target.value)}
               placeholder='Enter new task description'
+              autoSize={{minRows: 2}}
             />
           </div>
           <div className={styles.tasklist__actionsBottom}>
