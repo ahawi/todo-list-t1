@@ -4,9 +4,10 @@ import TaskList from './pages/TaskList'
 import TaskDetails from './pages/TaskDetails'
 import {type Task} from './types/Task'
 import styles from './App.module.css'
+import {mockTasks} from './data/mockTasks'
 
 const App = () => {
-  const [tasks, setTasks] = useState<Task[]>([])
+  const [tasks, setTasks] = useState<Task[]>(mockTasks)
 
   const getTaskById = (id: number): Task | undefined => {
     return tasks.find((t) => t.id === id)
