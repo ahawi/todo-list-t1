@@ -1,0 +1,44 @@
+name: todo-list-backend
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: taskdb
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - task-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: task-server
+    environment:
+      GOPROXY: direct
+      DATABASE_URL: "postgres://postgres:postgres@db:5432/postgres"
+    ports:
+      - "8056:8056"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - task-network
+
+volumes:
+  postgres_data:
+
+networks:
+  task-network:
+    driver: bridge
