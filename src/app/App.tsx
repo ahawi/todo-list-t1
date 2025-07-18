@@ -52,7 +52,7 @@ const App = () => {
   }
 
   return (
-    <Router>
+    <Router basename="/todo-list-t1/">
       <div className={styles.app__container}>
         <Routes>
           <Route path="/" element={<TaskListWrapper />} />
