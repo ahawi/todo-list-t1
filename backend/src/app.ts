@@ -9,5 +9,4 @@ app.use(express.json())
 app.use(cors())
 
 app.use('/tasks', taskRoutes)
-
 module.exports = app;
