@@ -1,7 +1,7 @@
 import { createEvent, createStore, createEffect } from 'effector'
 import { type Task } from '@entities/task/ui/types/types'
 
-const API_BASE_URL = 'https://80.249.149.74:8056'
+const API_BASE_URL = 'http://80.249.149.74:8056'
 
 /**
  * @event taskCreated

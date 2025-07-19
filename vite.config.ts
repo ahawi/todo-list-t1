@@ -5,6 +5,15 @@ import path from 'path'
 export default defineConfig({
   plugins: [react()],
   base: '/todo-list-t1/',
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://80.249.149.74:8056',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
