@@ -1,0 +1,21 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background: #1c92d2;
+  background: -webkit-linear-gradient(to right, #1c92d2, #f2fcfe);
+  background: linear-gradient(to right, #1c92d2, #f2fcfe);
+  background-attachment: fixed;
+}
+
+.app__container {
+  padding: 20px;
+}
+
+label {
+  font-weight: bold;
+}

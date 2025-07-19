@@ -1,0 +1,126 @@
+.tasklist {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border: none;
+}
+
+.tasklist__actions {
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-inline: auto;
+}
+
+.tasklist__actionsInner {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 30px;
+}
+
+.tasklist__actionsTop {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.tasklist__actionsTop .ant-input,
+.tasklist__actionsTop .ant-input-textarea {
+  width: 100%;
+}
+
+.tasklist__actionsBottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.tasklist__actionsBottom .ant-select {
+  flex: 1 1 150px;
+  min-width: 120px;
+}
+
+.tasklist__actionsBottom .ant-btn {
+  flex: 0 0 auto;
+  min-width: 100px;
+}
+
+.tasklist__lists {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+}
+
+.tasklist__card {
+  margin-bottom: 20px;
+  flex: 1;
+  margin: 0;
+  min-width: 300px;
+}
+
+.tasklist__card,
+.tasklist__actions {
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border: none;
+  background-color: #eaf8fd75;
+  border: 1px solid #fff;
+}
+
+.tasklist__cardTitle {
+  text-align: center;
+  color: #61667b;
+  white-space: normal;
+  margin-bottom: 0;
+}
+
+.tasklist__cardInner {
+  padding: 0;
+  border-bottom: 0;
+  border: none !important;
+}
+
+.tasklist__select {
+  min-width: 140px;
+}
+
+.tasklist__card::before,
+.tasklist__actions::before,
+.tasklist::before {
+  content: '';
+  position: absolute;
+  background: inherit;
+  z-index: -1;
+  margin: -20px;
+  box-shadow: inset 0 0 200px rgba(255, 255, 255, 0.5);
+  filter: blur(10px);
+}
+
+@media (max-width: 1280px) {
+  .tasklist__card {
+    min-width: 50px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .tasklist__lists {
+    flex-direction: column;
+  }
+}
