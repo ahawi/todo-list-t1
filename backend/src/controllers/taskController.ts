@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
 import { taskService } from '../services/taskService'
 import { Task } from '../types/task'
-import { Parser } from 'date-fns/parse/_lib/Parser'
 
 export const taskController = {
   getAllTasks(req: Request, res: Response): void {
