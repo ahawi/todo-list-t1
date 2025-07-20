@@ -1,13 +1,13 @@
-import { useState, useEffect, useRef } from 'react'
-import { Form, Input, Select, Button, Flex, Card, message, Spin } from 'antd'
-import { useParams, useNavigate } from 'react-router-dom'
-import { parseISO, format } from 'date-fns'
+import { useState, useEffect, useRef } from "react";
+import { Form, Input, Select, Button, Flex, Card, message, Spin } from "antd";
+import { useParams, useNavigate } from "react-router-dom";
+import { parseISO, format } from "date-fns";
 
-import styles from './TaskForm.module.css'
-import { type Task } from '@entities/task/ui/types/types'
+import styles from "./TaskForm.module.css";
+import { type Task } from "@entities/task/ui/types/types";
 
-const { Option } = Select
-const { TextArea } = Input
+const { Option } = Select;
+const { TextArea } = Input;
 
 /**
  * @interface TaskFormProps
@@ -17,63 +17,68 @@ const { TextArea } = Input
  * @property {boolean} [isNewTask=false] - Флаг, указывающий, что форма используется для создания новой задачи (true) или для редактирования существующей (false)
  */
 interface TaskFormProps {
-  getTaskById: (id: number) => Promise<Task | undefined>
-  onUpdateTask: (task: Task) => Promise<Task>
-  onAddTask: (task: Omit<Task, 'id' | 'createdAt'>) => Promise<Task>
-  isNewTask?: boolean
+  getTaskById: (id: number) => Promise<Task | undefined>;
+  onUpdateTask: (task: Task) => Promise<Task>;
+  onAddTask: (task: Omit<Task, "id" | "createdAt">) => Promise<Task>;
+  isNewTask?: boolean;
 }
 
 /**
  * @function TaskForm
  * @description компонент формы для создания или редактирования задачи, загружает данные существующей задачи по id из URL или инициализирует форму для новой задачи
  */
-export default function TaskForm({ getTaskById, onUpdateTask, onAddTask, isNewTask }: TaskFormProps) {
-  const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
-  const [form] = Form.useForm()
-  const [currentTask, setCurrentTask] = useState<Task | undefined>(undefined)
-  const [loading, setLoading] = useState<boolean>(true)
-  const [isSaving, setIsSaving] = useState<boolean>(false)
+export default function TaskForm({
+  getTaskById,
+  onUpdateTask,
+  onAddTask,
+  isNewTask,
+}: TaskFormProps) {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [form] = Form.useForm();
+  const [currentTask, setCurrentTask] = useState<Task | undefined>(undefined);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   // гарантируется, что form.setFieldsValue во втором useEffect всегда будет использовать актуальные данные, даже если currentTask ещё не обновился
-  const fetchedTaskRef = useRef<Task | undefined>(undefined)
+  const fetchedTaskRef = useRef<Task | undefined>(undefined);
 
   useEffect(() => {
     const loadTaskData = async () => {
-      setLoading(true)
+      setLoading(true);
       if (isNewTask) {
         form.setFieldsValue({
-          title: '',
-          description: '',
-          category: 'Feature',
-          status: 'To Do',
-          priority: 'Medium',
-        })
-        setCurrentTask(undefined)
-        setLoading(false)
+          title: "",
+          description: "",
+          category: "Feature",
+          status: "To Do",
+          priority: "Medium",
+        });
+        setCurrentTask(undefined);
+        setLoading(false);
       } else if (id) {
         try {
-          const taskId = Number(id)
-          const task = await getTaskById(taskId)
+          const taskId = Number(id);
+          const task = await getTaskById(taskId);
           if (task) {
-            fetchedTaskRef.current = task
-            setCurrentTask(task)
+            fetchedTaskRef.current = task;
+            setCurrentTask(task);
           } else {
-            message.error('Task not found!')
-            navigate('/tasks')
+            message.error("Task not found!");
+            navigate("/tasks");
           }
         } catch (error) {
-          console.error('Error loading task:', error)
-          message.error('Error loading task.')
-          navigate('/tasks')
+          console.error("Error loading task:", error);
+          message.error("Error loading task.");
+          navigate("/tasks");
         } finally {
-          setLoading(false)
+          setLoading(false);
         }
       }
-    }
+    };
 
-    loadTaskData()
-  }, [id, getTaskById, form, navigate, isNewTask])
+    loadTaskData();
+  }, [id, getTaskById, form, navigate, isNewTask]);
 
   /**
    * @useEffect
@@ -87,19 +92,19 @@ export default function TaskForm({ getTaskById, onUpdateTask, onAddTask, isNewTa
         category: fetchedTaskRef.current.category,
         status: fetchedTaskRef.current.status,
         priority: fetchedTaskRef.current.priority,
-      })
+      });
 
       // предотвращение повторной установки значений формы, если компонент перерендерится по каким-либо причинам, но без изменения id или isNewTask
-      fetchedTaskRef.current = undefined
+      fetchedTaskRef.current = undefined;
     }
-  }, [loading, isNewTask, form])
+  }, [loading, isNewTask, form]);
 
   /**
    * @function onFinish
    * @description обработчик отправки формы, отправляет данные для создания или обновления задачи через переданные пропсы onAddTask или onUpdateTask
    */
   const onFinish = async (values: Task) => {
-    setIsSaving(true)
+    setIsSaving(true);
     try {
       const taskDataToSend = {
         title: values.title,
@@ -107,37 +112,37 @@ export default function TaskForm({ getTaskById, onUpdateTask, onAddTask, isNewTa
         category: values.category,
         status: values.status,
         priority: values.priority,
-      } as Omit<Task, 'id' | 'createdAt'> // убеждаемся, что отправляем только нужные поля
+      } as Omit<Task, "id" | "createdAt">; // убеждаемся, что отправляем только нужные поля
 
       if (isNewTask) {
-        await onAddTask(taskDataToSend)
-        message.success('Task created successfully!')
+        await onAddTask(taskDataToSend);
+        message.success("Task created successfully!");
       } else if (currentTask && id) {
         const updatedTask: Task = {
           ...taskDataToSend,
           id: Number(id),
           createdAt: currentTask.createdAt, // createdAt берется из текущей задачи
-        }
-        await onUpdateTask(updatedTask)
-        message.success('Task updated successfully!')
+        };
+        await onUpdateTask(updatedTask);
+        message.success("Task updated successfully!");
       }
-      navigate('/tasks')
-    } catch (error) {
-      message.error('Error saving task.')
+      navigate("/tasks");
+    } catch {
+      message.error("Error saving task.");
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   /**
    * @function onCancel
    * @description перенаправление пользователя обратно к списку задач
    */
   const onCancel = () => {
-    navigate('/tasks')
-  }
+    navigate("/tasks");
+  };
 
-  const formTitle = isNewTask ? 'Create new task' : 'Edit task'
+  const formTitle = isNewTask ? "Create new task" : "Edit task";
 
   // лоадер
   if (loading && !isNewTask) {
@@ -149,7 +154,7 @@ export default function TaskForm({ getTaskById, onUpdateTask, onAddTask, isNewTa
           </Spin>
         </div>
       </Card>
-    )
+    );
   }
 
   return (
@@ -158,9 +163,17 @@ export default function TaskForm({ getTaskById, onUpdateTask, onAddTask, isNewTa
         form={form}
         layout="vertical"
         onFinish={onFinish}
-        initialValues={{ category: 'Feature', status: 'To Do', priority: 'Medium' }}
+        initialValues={{
+          category: "Feature",
+          status: "To Do",
+          priority: "Medium",
+        }}
       >
-        <Form.Item name="title" label="Title" rules={[{ required: true, message: 'Please enter the task title!' }]}>
+        <Form.Item
+          name="title"
+          label="Title"
+          rules={[{ required: true, message: "Please enter the task title!" }]}
+        >
           <Input />
         </Form.Item>
 
@@ -168,7 +181,11 @@ export default function TaskForm({ getTaskById, onUpdateTask, onAddTask, isNewTa
           <TextArea autoSize={{ minRows: 2 }} />
         </Form.Item>
 
-        <Form.Item name="category" label="Category" rules={[{ required: true, message: 'Please select a category!' }]}>
+        <Form.Item
+          name="category"
+          label="Category"
+          rules={[{ required: true, message: "Please select a category!" }]}
+        >
           <Select>
             <Option value="Bug">Bug</Option>
             <Option value="Feature">Feature</Option>
@@ -178,7 +195,11 @@ export default function TaskForm({ getTaskById, onUpdateTask, onAddTask, isNewTa
           </Select>
         </Form.Item>
 
-        <Form.Item name="status" label="Status" rules={[{ required: true, message: 'Please select a status!' }]}>
+        <Form.Item
+          name="status"
+          label="Status"
+          rules={[{ required: true, message: "Please select a status!" }]}
+        >
           <Select>
             <Option value="To Do">To Do</Option>
             <Option value="In Progress">In Progress</Option>
@@ -186,7 +207,11 @@ export default function TaskForm({ getTaskById, onUpdateTask, onAddTask, isNewTa
           </Select>
         </Form.Item>
 
-        <Form.Item name="priority" label="Priority" rules={[{ required: true, message: 'Please select a priority!' }]}>
+        <Form.Item
+          name="priority"
+          label="Priority"
+          rules={[{ required: true, message: "Please select a priority!" }]}
+        >
           <Select>
             <Option value="Low">Low</Option>
             <Option value="Medium">Medium</Option>
@@ -197,7 +222,14 @@ export default function TaskForm({ getTaskById, onUpdateTask, onAddTask, isNewTa
         {!isNewTask && (
           <Form.Item label="Created At">
             <Input
-              value={currentTask?.createdAt ? format(parseISO(currentTask.createdAt), 'dd.MM.yyyy HH:mm:ss') : ''}
+              value={
+                currentTask?.createdAt
+                  ? format(
+                      parseISO(currentTask.createdAt),
+                      "dd.MM.yyyy HH:mm:ss",
+                    )
+                  : ""
+              }
               disabled
             />
           </Form.Item>
@@ -215,5 +247,5 @@ export default function TaskForm({ getTaskById, onUpdateTask, onAddTask, isNewTa
         </Form.Item>
       </Form>
     </Card>
-  )
+  );
 }

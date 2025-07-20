@@ -1,28 +1,28 @@
-import {createEvent, createStore, createEffect} from 'effector'
-import {type Task} from '@entities/task/ui/types/types'
+import { createEvent, createStore, createEffect } from "effector";
+import { type Task } from "@entities/task/ui/types/types";
 
-const API_BASE_URL = 'https://todo-backend-ugmb.onrender.com'
+const API_BASE_URL = "https://todo-backend-ugmb.onrender.com";
 
 /**
  * @event taskCreated
  * @description cобытие, которое диспатчится при успешном создании новой задачи
  * @param {Task} task - объект созданной задачи
  */
-export const taskCreated = createEvent<Task>()
+export const taskCreated = createEvent<Task>();
 
 /**
  * @event taskUpdated
  * @description cобытие, которое диспатчится при успешном обновлении существующей задачи
  * @param {Task} task - объект обновленной задачи
  */
-export const taskUpdated = createEvent<Task>()
+export const taskUpdated = createEvent<Task>();
 
 /**
  * @event taskDeleted
  * @description cобытие, которое диспатчится при успешном удалении задачи
  * @param {number} id - идентификатор удаленной задачи
  */
-export const taskDeleted = createEvent<number>()
+export const taskDeleted = createEvent<number>();
 
 /**
  * @effect fetchTasksFx
@@ -30,12 +30,12 @@ export const taskDeleted = createEvent<number>()
  * @returns {Promise<Task[]>} массив объектов задач
  */
 export const fetchTasksFx = createEffect<void, Task[], Error>(async () => {
-  const response = await fetch(`${API_BASE_URL}/tasks`)
+  const response = await fetch(`${API_BASE_URL}/tasks`);
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`)
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
-  return (await response.json()) as Task[]
-})
+  return (await response.json()) as Task[];
+});
 
 /**
  * @effect getTaskByIdFx
@@ -44,21 +44,23 @@ export const fetchTasksFx = createEffect<void, Task[], Error>(async () => {
  * @returns {Promise<Task | undefined>} объект задачи (undefined, если задача не найдена)
  * @throws {Error} в случае HTTP-ошибок
  */
-export const getTaskByIdFx = createEffect<number, Task | undefined, Error>(async (id) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/tasks/${id}`)
-    if (response.status === 404) {
-      return undefined
+export const getTaskByIdFx = createEffect<number, Task | undefined, Error>(
+  async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/tasks/${id}`);
+      if (response.status === 404) {
+        return undefined;
+      }
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return (await response.json()) as Task;
+    } catch (error) {
+      console.error(`Error getting task with ID ${id}:`, error);
+      throw error;
     }
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-    return (await response.json()) as Task
-  } catch (error) {
-    console.error(`Error getting task with ID ${id}:`, error)
-    throw error
-  }
-})
+  },
+);
 
 /**
  * @effect addTaskFx
@@ -66,10 +68,14 @@ export const getTaskByIdFx = createEffect<number, Task | undefined, Error>(async
  * @param {Omit<Task, 'id' | 'createdAt'>} taskData - данные новой задачи (без id и createdAt - генерируемых на сервере)
  * @returns {Promise<Task>} созданный объект задачи с id и createdAt
  */
-export const addTaskFx = createEffect<Omit<Task, 'id' | 'createdAt'>, Task, Error>(async (taskData) => {
+export const addTaskFx = createEffect<
+  Omit<Task, "id" | "createdAt">,
+  Task,
+  Error
+>(async (taskData) => {
   const response = await fetch(`${API_BASE_URL}/tasks`, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       title: taskData.title,
       description: taskData.description,
@@ -77,12 +83,12 @@ export const addTaskFx = createEffect<Omit<Task, 'id' | 'createdAt'>, Task, Erro
       category: taskData.category,
       status: taskData.status,
     }),
-  })
+  });
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`)
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
-  return (await response.json()) as Task
-})
+  return (await response.json()) as Task;
+});
 
 /**
  * @effect updateTaskFx
@@ -90,23 +96,25 @@ export const addTaskFx = createEffect<Omit<Task, 'id' | 'createdAt'>, Task, Erro
  * @param {Task} updatedTask - объект задачи с обновленными данными
  * @returns {Promise<Task>} обновленный объект задачи
  */
-export const updateTaskFx = createEffect<Task, Task, Error>(async (updatedTask) => {
-  const response = await fetch(`${API_BASE_URL}/tasks/${updatedTask.id}`, {
-    method: 'PUT',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({
-      title: updatedTask.title,
-      description: updatedTask.description,
-      priority: updatedTask.priority,
-      category: updatedTask.category,
-      status: updatedTask.status,
-    }),
-  })
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`)
-  }
-  return (await response.json()) as Task
-})
+export const updateTaskFx = createEffect<Task, Task, Error>(
+  async (updatedTask) => {
+    const response = await fetch(`${API_BASE_URL}/tasks/${updatedTask.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: updatedTask.title,
+        description: updatedTask.description,
+        priority: updatedTask.priority,
+        category: updatedTask.category,
+        status: updatedTask.status,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return (await response.json()) as Task;
+  },
+);
 
 /**
  * @effect deleteTaskFx
@@ -115,37 +123,44 @@ export const updateTaskFx = createEffect<Task, Task, Error>(async (updatedTask) 
  * @returns {Promise<void>}
  */
 export const deleteTaskFx = createEffect<number, void, Error>(async (id) => {
-  const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {method: 'DELETE'})
+  const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {
+    method: "DELETE",
+  });
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`)
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
-})
+});
 
 /**
  * @store $tasks
  * @description массив всех задач
  * @type {Task[]}
  */
-export const $tasks = createStore<Task[]>([])
+export const $tasks = createStore<Task[]>([]);
 
 /**
  * @store $tasksLoading
  * @description состояние загрузки задач
  * @type {boolean}
  */
-export const $tasksLoading = fetchTasksFx.pending
+export const $tasksLoading = fetchTasksFx.pending;
 
 $tasks
   .on(addTaskFx.doneData, (tasks, newTask) => [newTask, ...tasks])
   .on(fetchTasksFx.doneData, (_, fetchedTasks) => {
     // сортировка задач по убыванию даты создания (самые новые сверху)
     if (Array.isArray(fetchedTasks)) {
-      return fetchedTasks.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      return fetchedTasks.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
     } else {
-      return []
+      return [];
     }
   })
   .on(updateTaskFx.doneData, (tasks, updatedTask) =>
     tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)),
   )
-  .on(deleteTaskFx.done, (tasks, {params: id}) => tasks.filter((task) => task.id !== id))
+  .on(deleteTaskFx.done, (tasks, { params: id }) =>
+    tasks.filter((task) => task.id !== id),
+  );
