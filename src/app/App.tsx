@@ -1,4 +1,4 @@
-import {BrowserRouter, Routes, Route, useNavigate} from 'react-router-dom'
+import {Routes, Route, useNavigate, HashRouter} from 'react-router-dom'
 import TaskList from '@pages/task-list/TaskList'
 import TaskForm from '@pages/task-form/TaskForm'
 import {getTaskByIdFx, updateTaskFx, addTaskFx, deleteTaskFx, fetchTasksFx} from './store/tasks'
@@ -51,7 +51,7 @@ const App = () => {
   }
 
   return (
-    <BrowserRouter basename='/todo-list-t1/'>
+    <HashRouter basename='/todo-list-t1/'>
       <div className={styles.app__container}>
         <Routes>
           <Route path='/' element={<TaskListWrapper />} />
@@ -73,7 +73,7 @@ const App = () => {
           />
         </Routes>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 export default App
