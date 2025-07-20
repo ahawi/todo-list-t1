@@ -1,7 +1,7 @@
 import { createEvent, createStore, createEffect } from 'effector'
 import { type Task } from '@entities/task/ui/types/types'
 
-const API_BASE_URL = 'https://todo-list-t1-xel8.vercel.app'
+const API_BASE_URL = 'https://todo-backend-ugmb.onrender.com'
 
 /**
  * @event taskCreated
