@@ -1,9 +1,15 @@
-import {Routes, Route, useNavigate, HashRouter} from 'react-router-dom'
-import TaskList from '@pages/task-list/TaskList'
-import TaskForm from '@pages/task-form/TaskForm'
-import {getTaskByIdFx, updateTaskFx, addTaskFx, deleteTaskFx, fetchTasksFx} from './store/tasks'
-import styles from './App.module.css'
-import {useEffect} from 'react'
+import { Routes, Route, useNavigate, HashRouter } from "react-router-dom";
+import TaskList from "@pages/task-list/TaskList";
+import TaskForm from "@pages/task-form/TaskForm";
+import {
+  getTaskByIdFx,
+  updateTaskFx,
+  addTaskFx,
+  deleteTaskFx,
+  fetchTasksFx,
+} from "./store/tasks";
+import styles from "./App.module.css";
+import { useEffect } from "react";
 
 const App = () => {
   /**
@@ -13,13 +19,13 @@ const App = () => {
    * @returns {JSX.Element} компонент TaskList с переданными пропсами
    */
   const TaskListWrapper = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     // эффект fetchTasksFx() вызывается один раз при первой загрузке или навигации на список задач,
     // чтобы получить актуальный список задач с сервера
     useEffect(() => {
-      fetchTasksFx()
-    }, [])
+      fetchTasksFx();
+    }, []);
 
     /**
      * @callback handleEdit
@@ -27,16 +33,16 @@ const App = () => {
      * @param {number} id - идентификатор задачи для редактирования
      */
     const handleEdit = (id: number) => {
-      navigate(`/task/${id}`)
-    }
+      navigate(`/task/${id}`);
+    };
 
     /**
      * @callback handleCreateNewTask
      * @description навигация к форме создания новой задачи
      */
     const handleCreateNewTask = () => {
-      navigate('/task/new')
-    }
+      navigate("/task/new");
+    };
 
     /**
      * @callback handleDeleteWrapper
@@ -44,24 +50,36 @@ const App = () => {
      * @param {number} id - идентификатор задачи, которую нужно удалить
      */
     const handleDeleteWrapper = async (id: number) => {
-      await deleteTaskFx(id)
-    }
+      await deleteTaskFx(id);
+    };
 
-    return <TaskList onDelete={handleDeleteWrapper} onEdit={handleEdit} onCreateNewTask={handleCreateNewTask} />
-  }
+    return (
+      <TaskList
+        onDelete={handleDeleteWrapper}
+        onEdit={handleEdit}
+        onCreateNewTask={handleCreateNewTask}
+      />
+    );
+  };
 
   return (
-    <HashRouter basename='/todo-list-t1/'>
+    <HashRouter>
       <div className={styles.app__container}>
         <Routes>
-          <Route path='/' element={<TaskListWrapper />} />
-          <Route path='/tasks' element={<TaskListWrapper />} />
+          <Route path="/" element={<TaskListWrapper />} />
+          <Route path="/tasks" element={<TaskListWrapper />} />
           <Route
-            path='/task/:id'
-            element={<TaskForm getTaskById={getTaskByIdFx} onUpdateTask={updateTaskFx} onAddTask={addTaskFx} />}
+            path="/task/:id"
+            element={
+              <TaskForm
+                getTaskById={getTaskByIdFx}
+                onUpdateTask={updateTaskFx}
+                onAddTask={addTaskFx}
+              />
+            }
           />
           <Route
-            path='/task/new'
+            path="/task/new"
             element={
               <TaskForm
                 getTaskById={getTaskByIdFx}
@@ -74,6 +92,6 @@ const App = () => {
         </Routes>
       </div>
     </HashRouter>
-  )
-}
-export default App
+  );
+};
+export default App;

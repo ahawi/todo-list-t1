@@ -13,7 +13,7 @@
 }
 
 .card__details::before {
-  content: '';
+  content: "";
   position: absolute;
   background: inherit;
   z-index: -1;
@@ -29,15 +29,9 @@
 .card__detailsSpinWrap {
   text-align: center;
   padding: 50px 0;
-}
-
-.card__detailsSpinWrap {
-  text-align: center;
-  padding: 50px 0;
-}
-
-.card__detailsSpin {
-  height: 50px;
+  background: transparent;
+  border: none;
+  background-color: transparent;
 }
 
 @media (max-width: 768px) {

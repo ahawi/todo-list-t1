@@ -1,9 +1,9 @@
-import { Button, Card } from "antd";
+import { Button, Card, Spin } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useUnit } from "effector-react";
 import styles from "./TaskList.module.css";
 import { RenderTaskList } from "@shared/lib/renderTaskList";
-import { $tasks } from "@app/store/tasks";
+import { $tasks, fetchTasksFx } from "@app/store/tasks";
 
 /**
  * @interface TaskListProps
@@ -26,7 +26,7 @@ export default function TaskList({
   onEdit,
   onCreateNewTask,
 }: TaskListProps) {
-  const tasks = useUnit($tasks);
+  const [tasks, isLoading] = useUnit([$tasks, fetchTasksFx.pending]);
   const safeTasks = tasks || [];
 
   const handleDeleteTask = async (id: number) => {
@@ -44,6 +44,13 @@ export default function TaskList({
   );
   const doneTasks = safeTasks.filter((task) => task.status === "Done");
 
+  if (isLoading) {
+    return (
+      <div className={styles.tasklist__spinWrap}>
+        <Spin size="large" />
+      </div>
+    );
+  }
   return (
     <div className={styles.tasklist}>
       <Card title="Task Manager" className={styles.tasklist__actions}>

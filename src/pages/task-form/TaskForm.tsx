@@ -38,7 +38,6 @@ export default function TaskForm({
   const [form] = Form.useForm();
   const [currentTask, setCurrentTask] = useState<Task | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
-  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   // гарантируется, что form.setFieldsValue во втором useEffect всегда будет использовать актуальные данные, даже если currentTask ещё не обновился
   const fetchedTaskRef = useRef<Task | undefined>(undefined);
@@ -104,7 +103,6 @@ export default function TaskForm({
    * @description обработчик отправки формы, отправляет данные для создания или обновления задачи через переданные пропсы onAddTask или onUpdateTask
    */
   const onFinish = async (values: Task) => {
-    setIsSaving(true);
     try {
       const taskDataToSend = {
         title: values.title,
@@ -129,8 +127,6 @@ export default function TaskForm({
       navigate("/tasks");
     } catch {
       message.error("Error saving task.");
-    } finally {
-      setIsSaving(false);
     }
   };
 
@@ -147,13 +143,9 @@ export default function TaskForm({
   // лоадер
   if (loading && !isNewTask) {
     return (
-      <Card className={styles.card__details}>
-        <div className={styles.card__detailsSpinWrap}>
-          <Spin size="large">
-            <div className={styles.card__detailsSpin} />
-          </Spin>
-        </div>
-      </Card>
+      <div className={styles.card__detailsSpinWrap}>
+        <Spin size="large" />
+      </div>
     );
   }
 
@@ -237,12 +229,10 @@ export default function TaskForm({
 
         <Form.Item className={styles.card__buttons}>
           <Flex gap="small" justify="flex-end">
-            <Button type="primary" htmlType="submit" loading={isSaving}>
+            <Button type="primary" htmlType="submit">
               Save
             </Button>
-            <Button onClick={onCancel} disabled={isSaving}>
-              Cancel
-            </Button>
+            <Button onClick={onCancel}>Cancel</Button>
           </Flex>
         </Form.Item>
       </Form>

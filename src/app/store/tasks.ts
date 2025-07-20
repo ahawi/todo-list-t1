@@ -99,7 +99,7 @@ export const addTaskFx = createEffect<
 export const updateTaskFx = createEffect<Task, Task, Error>(
   async (updatedTask) => {
     const response = await fetch(`${API_BASE_URL}/tasks/${updatedTask.id}`, {
-      method: "PUT",
+      method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         title: updatedTask.title,
