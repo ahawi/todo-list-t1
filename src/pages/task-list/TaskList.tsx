@@ -1,9 +1,9 @@
-import { Button, Card } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
-import { useUnit } from 'effector-react'
+import {Button, Card} from 'antd'
+import {PlusOutlined} from '@ant-design/icons'
+import {useUnit} from 'effector-react'
 import styles from './TaskList.module.css'
-import { RenderTaskList } from '@shared/lib/renderTaskList'
-import { $tasks } from '@app/store/tasks'
+import {RenderTaskList} from '@shared/lib/renderTaskList'
+import {$tasks} from '@app/store/tasks'
 
 /**
  * @interface TaskListProps
@@ -21,24 +21,14 @@ interface TaskListProps {
  * @function TaskList
  * @description отображение списка задач, разделённых по статусам
  */
-export default function TaskList({ onDelete, onEdit, onCreateNewTask }: TaskListProps) {
+export default function TaskList({onDelete, onEdit, onCreateNewTask}: TaskListProps) {
   const tasks = useUnit($tasks)
   const safeTasks = tasks || []
 
-  /**
-   * @function handleDeleteTask
-   * @description удаление задачи
-   * @param {number} id id задачи, которую нужно удалить
-   */
   const handleDeleteTask = async (id: number) => {
     await onDelete(id)
   }
 
-  /**
-   * @function handleEditTask
-   * @description редактирование задачи
-   * @param {number} id id задачи, которую нужно редактировать
-   */
   const handleEditTask = (id: number) => {
     onEdit(id)
   }
@@ -50,10 +40,10 @@ export default function TaskList({ onDelete, onEdit, onCreateNewTask }: TaskList
 
   return (
     <div className={styles.tasklist}>
-      <Card title="Task Manager" className={styles.tasklist__actions}>
+      <Card title='Task Manager' className={styles.tasklist__actions}>
         <div className={styles.tasklist__actionsInner}>
           <div className={styles.tasklist__actionsTop}>
-            <Button type="primary" icon={<PlusOutlined />} onClick={onCreateNewTask}>
+            <Button type='primary' icon={<PlusOutlined />} onClick={onCreateNewTask}>
               Add New Task
             </Button>
           </div>
@@ -61,14 +51,14 @@ export default function TaskList({ onDelete, onEdit, onCreateNewTask }: TaskList
       </Card>
 
       <div className={styles.tasklist__lists}>
-        <RenderTaskList taskList={todoTasks} title="To Do" onDelete={handleDeleteTask} onEdit={handleEditTask} />
+        <RenderTaskList taskList={todoTasks} title='To Do' onDelete={handleDeleteTask} onEdit={handleEditTask} />
         <RenderTaskList
           taskList={inProgressTasks}
-          title="In Progress"
+          title='In Progress'
           onDelete={handleDeleteTask}
           onEdit={handleEditTask}
         />
-        <RenderTaskList taskList={doneTasks} title="Done" onDelete={handleDeleteTask} onEdit={handleEditTask} />
+        <RenderTaskList taskList={doneTasks} title='Done' onDelete={handleDeleteTask} onEdit={handleEditTask} />
       </div>
     </div>
   )

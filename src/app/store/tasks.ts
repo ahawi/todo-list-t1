@@ -1,7 +1,7 @@
-import { createEvent, createStore, createEffect } from 'effector'
-import { type Task } from '@entities/task/ui/types/types'
+import {createEvent, createStore, createEffect} from 'effector'
+import {type Task} from '@entities/task/ui/types/types'
 
-const API_BASE_URL = 'http://80.249.149.74:8056'
+const API_BASE_URL = 'https://todo-backend-ugmb.onrender.com'
 
 /**
  * @event taskCreated
@@ -69,7 +69,7 @@ export const getTaskByIdFx = createEffect<number, Task | undefined, Error>(async
 export const addTaskFx = createEffect<Omit<Task, 'id' | 'createdAt'>, Task, Error>(async (taskData) => {
   const response = await fetch(`${API_BASE_URL}/tasks`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
       title: taskData.title,
       description: taskData.description,
@@ -93,7 +93,7 @@ export const addTaskFx = createEffect<Omit<Task, 'id' | 'createdAt'>, Task, Erro
 export const updateTaskFx = createEffect<Task, Task, Error>(async (updatedTask) => {
   const response = await fetch(`${API_BASE_URL}/tasks/${updatedTask.id}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
       title: updatedTask.title,
       description: updatedTask.description,
@@ -115,7 +115,7 @@ export const updateTaskFx = createEffect<Task, Task, Error>(async (updatedTask) 
  * @returns {Promise<void>}
  */
 export const deleteTaskFx = createEffect<number, void, Error>(async (id) => {
-  const response = await fetch(`${API_BASE_URL}/tasks/${id}`, { method: 'DELETE' })
+  const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {method: 'DELETE'})
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`)
   }
@@ -148,4 +148,4 @@ $tasks
   .on(updateTaskFx.doneData, (tasks, updatedTask) =>
     tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)),
   )
-  .on(deleteTaskFx.done, (tasks, { params: id }) => tasks.filter((task) => task.id !== id))
+  .on(deleteTaskFx.done, (tasks, {params: id}) => tasks.filter((task) => task.id !== id))

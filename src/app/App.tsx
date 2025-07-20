@@ -1,10 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom'
+import {Routes, Route, useNavigate, BrowserRouter} from 'react-router-dom'
 import TaskList from '@pages/task-list/TaskList'
 import TaskForm from '@pages/task-form/TaskForm'
-
-import { getTaskByIdFx, updateTaskFx, addTaskFx, deleteTaskFx, fetchTasksFx } from './store/tasks'
+import {getTaskByIdFx, updateTaskFx, addTaskFx, deleteTaskFx, fetchTasksFx} from './store/tasks'
 import styles from './App.module.css'
-import { useEffect } from 'react'
+import {useEffect} from 'react'
 
 const App = () => {
   /**
@@ -52,17 +51,17 @@ const App = () => {
   }
 
   return (
-    <Router basename="/todo-list-t1/">
+    <BrowserRouter>
       <div className={styles.app__container}>
         <Routes>
-          <Route path="/" element={<TaskListWrapper />} />
-          <Route path="/tasks" element={<TaskListWrapper />} />
+          <Route path='/' element={<TaskListWrapper />} />
+          <Route path='/tasks' element={<TaskListWrapper />} />
           <Route
-            path="/task/:id"
+            path='/task/:id'
             element={<TaskForm getTaskById={getTaskByIdFx} onUpdateTask={updateTaskFx} onAddTask={addTaskFx} />}
           />
           <Route
-            path="/task/new"
+            path='/task/new'
             element={
               <TaskForm
                 getTaskById={getTaskByIdFx}
@@ -74,8 +73,7 @@ const App = () => {
           />
         </Routes>
       </div>
-    </Router>
+    </BrowserRouter>
   )
 }
-
 export default App
