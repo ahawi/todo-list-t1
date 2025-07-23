@@ -1,4 +1,4 @@
-import { Card, Flex, Spin } from 'antd'
+import { Card, Flex } from 'antd'
 import { useUnit } from 'effector-react'
 import styles from './TaskList.module.css'
 import { useEffect } from 'react'
