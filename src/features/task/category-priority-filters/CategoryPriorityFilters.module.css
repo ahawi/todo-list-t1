@@ -1,0 +1,9 @@
+.filters__button {
+  margin-top: 16px;
+  width: 100%;
+  max-width: 150px;
+}
+
+.filtres__select {
+  width: 150px;
+}

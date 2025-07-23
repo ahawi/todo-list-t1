@@ -29,15 +29,8 @@
 .card__detailsSpinWrap {
   text-align: center;
   padding: 50px 0;
-}
-
-.card__detailsSpinWrap {
-  text-align: center;
-  padding: 50px 0;
-}
-
-.card__detailsSpin {
-  height: 50px;
+  background: transparent;
+  border: none;
 }
 
 @media (max-width: 768px) {

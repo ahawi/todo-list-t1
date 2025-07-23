@@ -1,39 +1,31 @@
 import { useState, useEffect, useRef } from 'react'
-import { Form, Input, Select, Button, Flex, Card, message, Spin } from 'antd'
+import { Form, Input, Select, Button, Flex, Card, message } from 'antd'
 import { useParams, useNavigate } from 'react-router-dom'
 import { parseISO, format } from 'date-fns'
-
 import styles from './TaskForm.module.css'
 import { type Task } from '@entities/task/ui/types/types'
+import { addTaskFx, getTaskByIdFx, updateTaskFx } from '@/app/store/tasks'
+import { useUnit } from 'effector-react'
+import { LoadingSpinner } from '@/shared/ui/loading-spinner/LoadingSpinner'
 
 const { Option } = Select
 const { TextArea } = Input
 
 /**
- * @interface TaskFormProps
- * @property {(id: number) => Promise<Task | undefined>} getTaskById функция для получения данных задачи по её id. Возвращает промис с объектом задачи или undefined
- * @property {(task: Task) => Promise<Task>} onUpdateTask функция для обновления существующей задачи. Принимает полный объект задачи и возвращает промис с обновлённой задачей
- * @property {(task: Omit<Task, 'id' | 'createdAt'>) => Promise<Task>} onAddTask функция для добавления новой задачи. Принимает данные задачи без id и createdAt, возвращает промис с созданной задачей
- * @property {boolean} [isNewTask=false] - Флаг, указывающий, что форма используется для создания новой задачи (true) или для редактирования существующей (false)
- */
-interface TaskFormProps {
-  getTaskById: (id: number) => Promise<Task | undefined>
-  onUpdateTask: (task: Task) => Promise<Task>
-  onAddTask: (task: Omit<Task, 'id' | 'createdAt'>) => Promise<Task>
-  isNewTask?: boolean
-}
-
-/**
  * @function TaskForm
  * @description компонент формы для создания или редактирования задачи, загружает данные существующей задачи по id из URL или инициализирует форму для новой задачи
  */
-export default function TaskForm({ getTaskById, onUpdateTask, onAddTask, isNewTask }: TaskFormProps) {
+export default function TaskForm({ isNewTask }: { isNewTask?: boolean }) {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [form] = Form.useForm()
   const [currentTask, setCurrentTask] = useState<Task | undefined>(undefined)
   const [loading, setLoading] = useState<boolean>(true)
   const [isSaving, setIsSaving] = useState<boolean>(false)
+
+  const getTaskById = useUnit(getTaskByIdFx)
+  const addTask = useUnit(addTaskFx)
+  const updateTask = useUnit(updateTaskFx)
 
   // гарантируется, что form.setFieldsValue во втором useEffect всегда будет использовать актуальные данные, даже если currentTask ещё не обновился
   const fetchedTaskRef = useRef<Task | undefined>(undefined)
@@ -60,12 +52,11 @@ export default function TaskForm({ getTaskById, onUpdateTask, onAddTask, isNewTa
             setCurrentTask(task)
           } else {
             message.error('Task not found!')
-            navigate('/tasks')
+            navigate('/')
           }
         } catch (error) {
-          console.error('Error loading task:', error)
           message.error('Error loading task.')
-          navigate('/tasks')
+          navigate('/')
         } finally {
           setLoading(false)
         }
@@ -107,21 +98,21 @@ export default function TaskForm({ getTaskById, onUpdateTask, onAddTask, isNewTa
         category: values.category,
         status: values.status,
         priority: values.priority,
-      } as Omit<Task, 'id' | 'createdAt'> // убеждаемся, что отправляем только нужные поля
+      }
 
       if (isNewTask) {
-        await onAddTask(taskDataToSend)
+        await addTask(taskDataToSend)
         message.success('Task created successfully!')
       } else if (currentTask && id) {
         const updatedTask: Task = {
           ...taskDataToSend,
           id: Number(id),
-          createdAt: currentTask.createdAt, // createdAt берется из текущей задачи
+          createdAt: currentTask.createdAt,
         }
-        await onUpdateTask(updatedTask)
+        await updateTask(updatedTask)
         message.success('Task updated successfully!')
       }
-      navigate('/tasks')
+      navigate('/')
     } catch (error) {
       message.error('Error saving task.')
     } finally {
@@ -134,22 +125,14 @@ export default function TaskForm({ getTaskById, onUpdateTask, onAddTask, isNewTa
    * @description перенаправление пользователя обратно к списку задач
    */
   const onCancel = () => {
-    navigate('/tasks')
+    navigate('/')
   }
 
   const formTitle = isNewTask ? 'Create new task' : 'Edit task'
 
   // лоадер
   if (loading && !isNewTask) {
-    return (
-      <Card className={styles.card__details}>
-        <div className={styles.card__detailsSpinWrap}>
-          <Spin size="large">
-            <div className={styles.card__detailsSpin} />
-          </Spin>
-        </div>
-      </Card>
-    )
+    return <LoadingSpinner />
   }
 
   return (

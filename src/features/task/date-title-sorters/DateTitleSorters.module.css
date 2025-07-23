@@ -1,0 +1,9 @@
+.sorters__select {
+  width: 150px;
+}
+
+.sorters__button {
+  margin-top: 16px;
+  width: 100%;
+  max-width: 150px;
+}

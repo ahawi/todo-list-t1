@@ -1,7 +1,7 @@
-import { Button, Tag } from 'antd'
-import { DeleteOutlined } from '@ant-design/icons'
+import { Tag } from 'antd'
 import styles from './TaskItem.module.css'
 import { type Task } from '../types/types'
+import { DeleteTaskButton } from '@/features/task/delete-task/DeleteTaskButton'
 
 /**
  * @interface TaskItemProps
@@ -10,7 +10,6 @@ import { type Task } from '../types/types'
  */
 interface TaskItemProps {
   item: Task
-  onDelete: (id: number) => void
   onEdit: (id: number) => void
 }
 
@@ -59,7 +58,7 @@ const getPriorityColor = (priority: Task['priority']) => {
  * @description компонент для отображения одной задачи в списке
  * @param {TaskItemProps} props
  */
-export default function TaskItem({ item, onDelete, onEdit }: TaskItemProps) {
+export default function TaskItem({ item, onEdit }: TaskItemProps) {
   const formattedDateTime = new Date(item.createdAt).toLocaleString([], {
     year: 'numeric',
     month: '2-digit',
@@ -85,15 +84,7 @@ export default function TaskItem({ item, onDelete, onEdit }: TaskItemProps) {
         </div>
       </div>
       <div className={styles.card__actions}>
-        <Button
-          type="text"
-          danger
-          icon={<DeleteOutlined />}
-          onClick={(e) => {
-            e.stopPropagation()
-            onDelete(item.id)
-          }}
-        />
+        <DeleteTaskButton taskId={item.id} />
       </div>
     </div>
   )

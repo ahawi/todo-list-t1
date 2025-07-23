@@ -18,44 +18,13 @@
   margin-inline: auto;
 }
 
-.tasklist__actionsInner {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  gap: 30px;
-}
-
 .tasklist__actionsTop {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-}
-
-.tasklist__actionsTop .ant-input,
-.tasklist__actionsTop .ant-input-textarea {
-  width: 100%;
-}
-
-.tasklist__actionsBottom {
-  display: flex;
-  flex-wrap: wrap;
+  flex-direction: row;
   gap: 20px;
   width: 100%;
   align-items: center;
-  justify-content: center;
-}
-
-.tasklist__actionsBottom .ant-select {
-  flex: 1 1 150px;
-  min-width: 120px;
-}
-
-.tasklist__actionsBottom .ant-btn {
-  flex: 0 0 auto;
-  min-width: 100px;
+  justify-content: space-between;
 }
 
 .tasklist__lists {
@@ -122,5 +91,10 @@
 @media (max-width: 1024px) {
   .tasklist__lists {
     flex-direction: column;
+  }
+
+  .tasklist__actionsTop {
+    flex-direction: column;
+    align-items: center;
   }
 }

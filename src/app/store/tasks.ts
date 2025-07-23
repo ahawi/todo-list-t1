@@ -1,34 +1,15 @@
-import { createEvent, createStore, createEffect } from 'effector'
+import { createEvent, createStore, createEffect, sample } from 'effector'
 import { type Task } from '@entities/task/ui/types/types'
 
 const API_BASE_URL = 'https://todo-backend-ugmb.onrender.com'
 
-/**
- * @event taskCreated
- * @description cобытие, которое диспатчится при успешном создании новой задачи
- * @param {Task} task - объект созданной задачи
- */
 export const taskCreated = createEvent<Task>()
-
-/**
- * @event taskUpdated
- * @description cобытие, которое диспатчится при успешном обновлении существующей задачи
- * @param {Task} task - объект обновленной задачи
- */
 export const taskUpdated = createEvent<Task>()
-
-/**
- * @event taskDeleted
- * @description cобытие, которое диспатчится при успешном удалении задачи
- * @param {number} id - идентификатор удаленной задачи
- */
 export const taskDeleted = createEvent<number>()
 
-/**
- * @effect fetchTasksFx
- * @description эффект для получения всех задач с сервера
- * @returns {Promise<Task[]>} массив объектов задач
- */
+export const dateSortChanged = createEvent<string>()
+export const titleSortChanged = createEvent<string>()
+
 export const fetchTasksFx = createEffect<void, Task[], Error>(async () => {
   const response = await fetch(`${API_BASE_URL}/tasks`)
   if (!response.ok) {
@@ -135,6 +116,40 @@ export const $tasks = createStore<Task[]>([])
  */
 export const $tasksLoading = fetchTasksFx.pending
 
+export const $searchTerm = createStore<string>('')
+export const searchTermChanged = createEvent<string>()
+
+/**
+ * @event categoryFilterChanged
+ * @description событие, которое диспатчится при изменении выбранной категории фильтрации
+ * @param {string} category выбранная категория
+ */
+export const categoryFilterChanged = createEvent<string>()
+
+/**
+ * @store $selectedCategory
+ * @description стор, хранящий текущую выбранную категорию для фильтрации задач
+ * @type {string}
+ */
+export const $selectedCategory = createStore<string>('All')
+
+/**
+ * @event priorityFilterChanged
+ * @description cобытие, которое диспатчится при изменении выбранного приоритета фильтрации.
+ * @param {string} priority dыбранный приоритет
+ */
+export const priorityFilterChanged = createEvent<string>()
+
+/**
+ * @store $selectedPriority
+ * @description cтор, хранящий текущий выбранный приоритет для фильтрации задач
+ * @type {string}
+ */
+export const $selectedPriority = createStore<string>('All')
+
+export const $selectedDateSort = createStore<string>('Date')
+export const $selectedTitleSort = createStore<string>('Title')
+
 $tasks
   .on(addTaskFx.doneData, (tasks, newTask) => [newTask, ...tasks])
   .on(fetchTasksFx.doneData, (_, fetchedTasks) => {
@@ -149,3 +164,58 @@ $tasks
     tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)),
   )
   .on(deleteTaskFx.done, (tasks, { params: id }) => tasks.filter((task) => task.id !== id))
+
+$searchTerm.on(searchTermChanged, (_, term) => (term === undefined ? '' : term))
+$selectedCategory.on(categoryFilterChanged, (_, category) => (category === undefined ? 'All' : category))
+$selectedPriority.on(priorityFilterChanged, (_, priority) => (priority === undefined ? 'All' : priority))
+$selectedDateSort.on(dateSortChanged, (_, sort) => (sort === undefined ? 'Date' : sort))
+$selectedTitleSort.on(titleSortChanged, (_, sort) => (sort === undefined ? 'Title' : sort))
+
+export const $displayedTasks = createStore<Task[]>([])
+
+sample({
+  clock: [$tasks, $searchTerm, $selectedCategory, $selectedPriority, $selectedDateSort, $selectedTitleSort],
+  source: {
+    tasks: $tasks,
+    searchTerm: $searchTerm,
+    selectedCategory: $selectedCategory,
+    selectedPriority: $selectedPriority,
+    selectedDateSort: $selectedDateSort,
+    selectedTitleSort: $selectedTitleSort,
+  },
+  fn: ({ tasks, searchTerm, selectedCategory, selectedPriority, selectedDateSort, selectedTitleSort }) => {
+    let currentTasks = Array.isArray(tasks) ? [...tasks] : []
+
+    if (searchTerm) {
+      const lowerCaseSearchTerm = searchTerm.toLowerCase()
+      currentTasks = currentTasks.filter(
+        (task) =>
+          task.title.toLowerCase().includes(lowerCaseSearchTerm) ||
+          (task.description?.toLowerCase() || '').includes(lowerCaseSearchTerm),
+      )
+    }
+
+    if (selectedCategory !== 'All') {
+      currentTasks = currentTasks.filter((task) => task.category === selectedCategory)
+    }
+
+    if (selectedPriority !== 'All') {
+      currentTasks = currentTasks.filter((task) => task.priority === selectedPriority)
+    }
+
+    if (selectedDateSort === 'Newest') {
+      currentTasks.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    } else if (selectedDateSort === 'Oldest') {
+      currentTasks.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+    }
+
+    if (selectedTitleSort === 'Az') {
+      currentTasks.sort((a, b) => a.title.localeCompare(b.title))
+    } else if (selectedTitleSort === 'Za') {
+      currentTasks.sort((a, b) => b.title.localeCompare(a.title))
+    }
+
+    return currentTasks
+  },
+  target: $displayedTasks,
+})

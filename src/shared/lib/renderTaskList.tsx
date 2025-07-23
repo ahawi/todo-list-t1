@@ -13,7 +13,6 @@ import styles from '@pages/task-list/TaskList.module.css'
 interface RenderTaskListProps {
   taskList: Task[]
   title: string
-  onDelete: (id: number) => void
   onEdit: (id: number) => void
 }
 
@@ -21,7 +20,7 @@ interface RenderTaskListProps {
  * @function RenderTaskList
  * @description компонент, который используется для отображения задач, сгруппированных по статусу
  */
-export function RenderTaskList({ taskList, title, onDelete, onEdit }: RenderTaskListProps) {
+export function RenderTaskList({ taskList, title, onEdit }: RenderTaskListProps) {
   return (
     <Card title={title} className={styles.tasklist__card}>
       {taskList.length === 0 ? (
@@ -32,7 +31,7 @@ export function RenderTaskList({ taskList, title, onDelete, onEdit }: RenderTask
           dataSource={taskList}
           renderItem={(task) => (
             <List.Item key={task.id} className={styles.tasklist__cardInner}>
-              <TaskItem item={task} onDelete={onDelete} onEdit={onEdit} />
+              <TaskItem item={task} onEdit={onEdit} />
             </List.Item>
           )}
         />
